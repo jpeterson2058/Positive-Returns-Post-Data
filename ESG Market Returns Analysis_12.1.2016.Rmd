@@ -1,0 +1,1005 @@
+---
+title: "Positive Returns"
+author: "Joshua Peterson"
+date: "11/30/2016"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r, echo=FALSE, comment="", message=FALSE}
+esg.data = read.csv("ALL_STATE_INDEX_2016.csv")
+esg.data.frame = data.frame(esg.data)
+```
+
+Summary of data
+```{r, echo=FALSE, comment="", message=FALSE}
+summary(esg.data.frame)
+```
+
+Next, I would like to extract the latest values for EPI and WGI combine those scores with an equal weight and then compare those scores vs. the corresponding year notional GDP of each state and then the corresponding year market value of each state.
+
+Extracting 2012 EPI data for each country
+```{r, echo=FALSE, comment="", message=FALSE}
+epi.recent<- esg.data.frame[c(1,13)]
+epi.recent
+```
+
+Extracting 2012 WGI data for each country
+```{r, echo=FALSE, comment="", message=FALSE}
+wgi.recent<- esg.data.frame[c(1,22)]
+wgi.recent
+```
+
+Creating an average score for each state
+```{r, echo=FALSE, comment="", message=FALSE}
+comb.recent<- data.frame(epi.recent$TOT.EPI...2012+wgi.recent$TOT.WGI...2012)/2
+colnames(comb.recent)[1]<- "Combined ESG Score"
+tot.comb.state<- cbind(esg.data.frame$Country,comb.recent)
+colnames(tot.comb.state)[1]<- "State"
+tot.comb.state
+
+```
+
+I will no extract notional GDP for each state in 2012.  Data is provided by the Quandl data platform using data from the World Bank World Development Indicators. GDP values are in bn.
+```{r, echo=FALSE, comment="", message=FALSE}
+library(Quandl)
+Quandl.api_key("Ec8Vk5BqhqJzhQtjnzqn")
+
+arg.hist.gdp = Quandl("UNAE/GDPCD_ARG")
+arg.gdp = arg.hist.gdp[3,]
+arg.gdp = arg.gdp$`Gross Domestic Product (GDP)`/1000000000
+arg.gdp
+
+aus.hist.gdp = Quandl("UNAE/GDPCD_AUS")
+aus.gdp = aus.hist.gdp[3,]
+aus.gdp = aus.gdp$`Gross Domestic Product (GDP)`/1000000000
+aus.gdp
+
+aut.hist.gdp = Quandl("UNAE/GDPCD_AUT")
+aut.gdp = aut.hist.gdp[3,]
+aut.gdp = aut.gdp$`Gross Domestic Product (GDP)`/1000000000
+aut.gdp
+
+bel.hist.gdp = Quandl("UNAE/GDPCD_BEL")
+bel.gdp = bel.hist.gdp[3,]
+bel.gdp = bel.gdp$`Gross Domestic Product (GDP)`/1000000000
+bel.gdp
+
+bra.hist.gdp = Quandl("UNAE/GDPCD_BRA")
+bra.gdp = bra.hist.gdp[3,]
+bra.gdp = bra.gdp$`Gross Domestic Product (GDP)`/1000000000
+bra.gdp
+
+can.hist.gdp = Quandl("UNAE/GDPCD_CAN")
+can.gdp = can.hist.gdp[3,]
+can.gdp = can.gdp$`Gross Domestic Product (GDP)`/1000000000
+can.gdp
+
+chn.hist.gdp = Quandl("UNAE/GDPCD_CHN")
+chn.gdp = chn.hist.gdp[3,]
+chn.gdp = chn.gdp$`Gross Domestic Product (GDP)`/1000000000
+chn.gdp
+
+col.hist.gdp = Quandl("UNAE/GDPCD_COL")
+col.gdp = col.hist.gdp[3,]
+col.gdp = col.gdp$`Gross Domestic Product (GDP)`/1000000000
+col.gdp
+
+hrv.hist.gdp = Quandl("UNAE/GDPCD_HRV")
+hrv.gdp = hrv.hist.gdp[3,]
+hrv.gdp = hrv.gdp$`Gross Domestic Product (GDP)`/1000000000
+hrv.gdp
+
+cyp.hist.gdp = Quandl("UNAE/GDPCD_CYP")
+cyp.gdp = cyp.hist.gdp[3,]
+cyp.gdp = cyp.gdp$`Gross Domestic Product (GDP)`/1000000000
+cyp.gdp
+
+cze.hist.gdp = Quandl("UNAE/GDPCD_CZE")
+cze.gdp = cze.hist.gdp[3,]
+cze.gdp = cze.gdp$`Gross Domestic Product (GDP)`/1000000000
+cze.gdp
+
+dnk.hist.gdp = Quandl("UNAE/GDPCD_DNK")
+dnk.gdp = dnk.hist.gdp[3,]
+dnk.gdp = dnk.gdp$`Gross Domestic Product (GDP)`/1000000000
+dnk.gdp
+
+egy.hist.gdp = Quandl("UNAE/GDPCD_EGY")
+egy.gdp = egy.hist.gdp[3,]
+egy.gdp = egy.gdp$`Gross Domestic Product (GDP)`/1000000000
+egy.gdp
+
+fin.hist.gdp = Quandl("UNAE/GDPCD_FIN")
+fin.gdp = fin.hist.gdp[3,]
+fin.gdp = fin.gdp$`Gross Domestic Product (GDP)`/1000000000
+fin.gdp
+
+fra.hist.gdp = Quandl("UNAE/GDPCD_FRA")
+fra.gdp = fra.hist.gdp[3,]
+fra.gdp = fra.gdp$`Gross Domestic Product (GDP)`/1000000000
+fra.gdp
+
+deu.hist.gdp = Quandl("UNAE/GDPCD_DEU")
+deu.gdp = deu.hist.gdp[3,]
+deu.gdp = deu.gdp$`Gross Domestic Product (GDP)`/1000000000
+deu.gdp
+
+grc.hist.gdp = Quandl("UNAE/GDPCD_GRC")
+grc.gdp = grc.hist.gdp[3,]
+grc.gdp = grc.gdp$`Gross Domestic Product (GDP)`/1000000000
+grc.gdp
+
+hun.hist.gdp = Quandl("UNAE/GDPCD_HUN")
+hun.gdp = hun.hist.gdp[3,]
+hun.gdp = hun.gdp$`Gross Domestic Product (GDP)`/1000000000
+hun.gdp
+
+isl.hist.gdp = Quandl("UNAE/GDPCD_ISL")
+isl.gdp = isl.hist.gdp[3,]
+isl.gdp = isl.gdp$`Gross Domestic Product (GDP)`/1000000000
+isl.gdp
+
+ind.hist.gdp = Quandl("UNAE/GDPCD_IND")
+ind.gdp = ind.hist.gdp[3,]
+ind.gdp = ind.gdp$`Gross Domestic Product (GDP)`/1000000000
+ind.gdp
+
+idn.hist.gdp = Quandl("UNAE/GDPCD_IDN")
+idn.gdp = idn.hist.gdp[3,]
+idn.gdp = idn.gdp$`Gross Domestic Product (GDP)`/1000000000
+idn.gdp
+
+irl.hist.gdp = Quandl("UNAE/GDPCD_IRL")
+irl.gdp = irl.hist.gdp[3,]
+irl.gdp = irl.gdp$`Gross Domestic Product (GDP)`/1000000000
+irl.gdp
+
+isr.hist.gdp = Quandl("UNAE/GDPCD_ISR")
+isr.gdp = isr.hist.gdp[3,]
+isr.gdp = isr.gdp$`Gross Domestic Product (GDP)`/1000000000
+isr.gdp
+
+ita.hist.gdp = Quandl("UNAE/GDPCD_ITA")
+ita.gdp = ita.hist.gdp[3,]
+ita.gdp = ita.gdp$`Gross Domestic Product (GDP)`/1000000000
+ita.gdp
+
+jpn.hist.gdp = Quandl("UNAE/GDPCD_JPN")
+jpn.gdp = jpn.hist.gdp[3,]
+jpn.gdp = jpn.gdp$`Gross Domestic Product (GDP)`/1000000000
+jpn.gdp
+
+kor.hist.gdp = Quandl("UNAE/GDPCD_KOR")
+kor.gdp = kor.hist.gdp[3,]
+kor.gdp = kor.gdp$`Gross Domestic Product (GDP)`/1000000000
+kor.gdp
+
+mus.hist.gdp = Quandl("UNAE/GDPCD_MUS")
+mus.gdp = mus.hist.gdp[3,]
+mus.gdp = mus.gdp$`Gross Domestic Product (GDP)`/1000000000
+mus.gdp
+
+mex.hist.gdp = Quandl("UNAE/GDPCD_MEX")
+mex.gdp = mex.hist.gdp[3,]
+mex.gdp = mex.gdp$`Gross Domestic Product (GDP)`/1000000000
+mex.gdp
+
+nld.hist.gdp = Quandl("UNAE/GDPCD_NLD")
+nld.gdp = nld.hist.gdp[3,]
+nld.gdp = nld.gdp$`Gross Domestic Product (GDP)`/1000000000
+nld.gdp
+
+nzl.hist.gdp = Quandl("UNAE/GDPCD_NZL")
+nzl.gdp = nzl.hist.gdp[3,]
+nzl.gdp = nzl.gdp$`Gross Domestic Product (GDP)`/1000000000
+nzl.gdp
+
+nor.hist.gdp = Quandl("UNAE/GDPCD_NOR")
+nor.gdp = nor.hist.gdp[3,]
+nor.gdp = nor.gdp$`Gross Domestic Product (GDP)`/1000000000
+nor.gdp
+
+phl.hist.gdp = Quandl("UNAE/GDPCD_PHL")
+phl.gdp = phl.hist.gdp[3,]
+phl.gdp = phl.gdp$`Gross Domestic Product (GDP)`/1000000000
+phl.gdp
+
+sau.hist.gdp = Quandl("UNAE/GDPCD_SAU")
+sau.gdp = sau.hist.gdp[3,]
+sau.gdp = sau.gdp$`Gross Domestic Product (GDP)`/1000000000
+sau.gdp
+
+svn.hist.gdp = Quandl("UNAE/GDPCD_SVN")
+svn.gdp = svn.hist.gdp[3,]
+svn.gdp = svn.gdp$`Gross Domestic Product (GDP)`/1000000000
+svn.gdp
+
+zaf.hist.gdp = Quandl("UNAE/GDPCD_ZAF")
+zaf.gdp = zaf.hist.gdp[3,]
+zaf.gdp = zaf.gdp$`Gross Domestic Product (GDP)`/1000000000
+zaf.gdp
+
+esp.hist.gdp = Quandl("UNAE/GDPCD_ESP")
+esp.gdp = esp.hist.gdp[3,]
+esp.gdp = esp.gdp$`Gross Domestic Product (GDP)`/1000000000
+esp.gdp
+
+swe.hist.gdp = Quandl("UNAE/GDPCD_SWE")
+swe.gdp = swe.hist.gdp[3,]
+swe.gdp = swe.gdp$`Gross Domestic Product (GDP)`/1000000000
+swe.gdp
+
+che.hist.gdp = Quandl("UNAE/GDPCD_CHE")
+che.gdp = che.hist.gdp[3,]
+che.gdp = che.gdp$`Gross Domestic Product (GDP)`/1000000000
+che.gdp
+
+tha.hist.gdp = Quandl("UNAE/GDPCD_THA")
+tha.gdp = tha.hist.gdp[3,]
+tha.gdp = tha.gdp$`Gross Domestic Product (GDP)`/1000000000
+tha.gdp
+
+tur.hist.gdp = Quandl("UNAE/GDPCD_TUR")
+tur.gdp = tur.hist.gdp[3,]
+tur.gdp = tur.gdp$`Gross Domestic Product (GDP)`/1000000000
+tur.gdp
+
+ukr.hist.gdp = Quandl("UNAE/GDPCD_UKR")
+ukr.gdp = ukr.hist.gdp[3,]
+ukr.gdp = ukr.gdp$`Gross Domestic Product (GDP)`/1000000000
+ukr.gdp
+
+gbr.hist.gdp = Quandl("UNAE/GDPCD_GBR")
+gbr.gdp = gbr.hist.gdp[3,]
+gbr.gdp = gbr.gdp$`Gross Domestic Product (GDP)`/1000000000
+gbr.gdp
+
+usa.hist.gdp = Quandl("UNAE/GDPCD_USA")
+usa.gdp = usa.hist.gdp[3,]
+usa.gdp = usa.gdp$`Gross Domestic Product (GDP)`/1000000000
+usa.gdp
+
+#Creating a data frame 
+comb.gdp = data.frame(arg.gdp,aus.gdp,aut.gdp,bel.gdp,bra.gdp,can.gdp,chn.gdp,col.gdp,hrv.gdp,cyp.gdp,cze.gdp,dnk.gdp,egy.gdp,fin.gdp,fra.gdp,deu.gdp,grc.gdp,hun.gdp,isl.gdp,ind.gdp,idn.gdp,irl.gdp,isr.gdp,ita.gdp,jpn.gdp,kor.gdp,mus.gdp,mex.gdp,nld.gdp,nzl.gdp,nor.gdp,phl.gdp,sau.gdp,svn.gdp,zaf.gdp,esp.gdp,swe.gdp,che.gdp,tha.gdp,tur.gdp,ukr.gdp,gbr.gdp,usa.gdp)
+#Transposing the data frame to prep for combination with the ESG data frame.
+comb.gdp.final = t(comb.gdp)
+comb.gdp.final = data.frame(comb.gdp.final)
+#Labeling the data frame
+colnames(comb.gdp.final)[1]<- "2012 GDP"
+round(comb.gdp.final, digits = 2)
+
+esg.gdp.final = cbind(tot.comb.state, comb.gdp.final)
+esg.gdp.final
+summary(lm(esg.gdp.final$`Combined ESG Score`~esg.gdp.final$`2012 GDP`))
+
+```
+
+```{r, echo=FALSE, comment="", message=FALSE}
+library(ggplot2)
+
+gdp = esg.gdp.final$`2012 GDP`
+esg = esg.gdp.final$`Combined ESG Score`
+state = esg.gdp.final$State
+
+final.plot = ggplot(esg.gdp.final, aes(x=gdp, y=esg, label=state)) +
+  geom_point(aes(size=gdp, fill = esg), shape=21) + scale_size_area(max_size = 20) +
+  scale_x_continuous(name = "State GDP (in billions", limits=c(0,20000)) +
+  scale_y_continuous(name = "State Combined ESG", limits = c(0,100)) + 
+  geom_smooth() +
+    geom_text(size=2) + theme_bw() 
+
+final.plot
+
+
+```
+
+Isolation - comparing developed and developing markets and the SEIS.
+
+Developed markets.
+```{r, echo=FALSE, comment="", message=FALSE}
+dev = esg.data.frame$MARKET.TYPE == "Developed"
+dev = esg.data.frame[dev,]
+summary(dev)
+```
+
+Extracting 2012 EPI data for each developed country
+```{r, echo=FALSE, comment="", message=FALSE}
+dev.epi.recent<- dev[c(1,13)]
+dev.epi.recent
+```
+
+Extracting 2012 WGI data for each developed country
+```{r, echo=FALSE, comment="", message=FALSE}
+dev.wgi.recent<- dev[c(1,22)]
+dev.wgi.recent
+```
+
+Creating an average score for each developed state
+```{r, echo=FALSE, comment="", message=FALSE}
+dev.comb.recent<- data.frame(dev.epi.recent$TOT.EPI...2012+dev.wgi.recent$TOT.WGI...2012)/2
+colnames(dev.comb.recent)[1]<- "Combined ESG Score"
+dev.tot.comb.state<- cbind(dev$Country, dev.comb.recent)
+colnames(dev.tot.comb.state)[1]<- "State"
+dev.tot.comb.state
+```
+
+I will no extract notional GDP for each developed country in 2012.  Data is provided by the Quandl data platform using data from the World Bank World Development Indicators. GDP values are in bn.
+```{r, echo=FALSE, comment="", message=FALSE}
+library(Quandl)
+Quandl.api_key("Ec8Vk5BqhqJzhQtjnzqn")
+
+aus.hist.gdp = Quandl("UNAE/GDPCD_AUS")
+aus.gdp = aus.hist.gdp[3,]
+aus.gdp = aus.gdp$`Gross Domestic Product (GDP)`/1000000000
+aus.gdp
+
+aut.hist.gdp = Quandl("UNAE/GDPCD_AUT")
+aut.gdp = aut.hist.gdp[3,]
+aut.gdp = aut.gdp$`Gross Domestic Product (GDP)`/1000000000
+aut.gdp
+
+bel.hist.gdp = Quandl("UNAE/GDPCD_BEL")
+bel.gdp = bel.hist.gdp[3,]
+bel.gdp = bel.gdp$`Gross Domestic Product (GDP)`/1000000000
+bel.gdp
+
+can.hist.gdp = Quandl("UNAE/GDPCD_CAN")
+can.gdp = can.hist.gdp[3,]
+can.gdp = can.gdp$`Gross Domestic Product (GDP)`/1000000000
+can.gdp
+
+chn.hist.gdp = Quandl("UNAE/GDPCD_CHN")
+chn.gdp = chn.hist.gdp[3,]
+chn.gdp = chn.gdp$`Gross Domestic Product (GDP)`/1000000000
+chn.gdp
+
+dnk.hist.gdp = Quandl("UNAE/GDPCD_DNK")
+dnk.gdp = dnk.hist.gdp[3,]
+dnk.gdp = dnk.gdp$`Gross Domestic Product (GDP)`/1000000000
+dnk.gdp
+
+fin.hist.gdp = Quandl("UNAE/GDPCD_FIN")
+fin.gdp = fin.hist.gdp[3,]
+fin.gdp = fin.gdp$`Gross Domestic Product (GDP)`/1000000000
+fin.gdp
+
+fra.hist.gdp = Quandl("UNAE/GDPCD_FRA")
+fra.gdp = fra.hist.gdp[3,]
+fra.gdp = fra.gdp$`Gross Domestic Product (GDP)`/1000000000
+fra.gdp
+
+deu.hist.gdp = Quandl("UNAE/GDPCD_DEU")
+deu.gdp = deu.hist.gdp[3,]
+deu.gdp = deu.gdp$`Gross Domestic Product (GDP)`/1000000000
+deu.gdp
+
+hun.hist.gdp = Quandl("UNAE/GDPCD_HUN")
+hun.gdp = hun.hist.gdp[3,]
+hun.gdp = hun.gdp$`Gross Domestic Product (GDP)`/1000000000
+hun.gdp
+
+isl.hist.gdp = Quandl("UNAE/GDPCD_ISL")
+isl.gdp = isl.hist.gdp[3,]
+isl.gdp = isl.gdp$`Gross Domestic Product (GDP)`/1000000000
+isl.gdp
+
+irl.hist.gdp = Quandl("UNAE/GDPCD_IRL")
+irl.gdp = irl.hist.gdp[3,]
+irl.gdp = irl.gdp$`Gross Domestic Product (GDP)`/1000000000
+irl.gdp
+
+isr.hist.gdp = Quandl("UNAE/GDPCD_ISR")
+isr.gdp = isr.hist.gdp[3,]
+isr.gdp = isr.gdp$`Gross Domestic Product (GDP)`/1000000000
+isr.gdp
+
+ita.hist.gdp = Quandl("UNAE/GDPCD_ITA")
+ita.gdp = ita.hist.gdp[3,]
+ita.gdp = ita.gdp$`Gross Domestic Product (GDP)`/1000000000
+ita.gdp
+
+jpn.hist.gdp = Quandl("UNAE/GDPCD_JPN")
+jpn.gdp = jpn.hist.gdp[3,]
+jpn.gdp = jpn.gdp$`Gross Domestic Product (GDP)`/1000000000
+jpn.gdp
+
+kor.hist.gdp = Quandl("UNAE/GDPCD_KOR")
+kor.gdp = kor.hist.gdp[3,]
+kor.gdp = kor.gdp$`Gross Domestic Product (GDP)`/1000000000
+kor.gdp
+
+nld.hist.gdp = Quandl("UNAE/GDPCD_NLD")
+nld.gdp = nld.hist.gdp[3,]
+nld.gdp = nld.gdp$`Gross Domestic Product (GDP)`/1000000000
+nld.gdp
+
+nzl.hist.gdp = Quandl("UNAE/GDPCD_NZL")
+nzl.gdp = nzl.hist.gdp[3,]
+nzl.gdp = nzl.gdp$`Gross Domestic Product (GDP)`/1000000000
+nzl.gdp
+
+nor.hist.gdp = Quandl("UNAE/GDPCD_NOR")
+nor.gdp = nor.hist.gdp[3,]
+nor.gdp = nor.gdp$`Gross Domestic Product (GDP)`/1000000000
+nor.gdp
+
+esp.hist.gdp = Quandl("UNAE/GDPCD_ESP")
+esp.gdp = esp.hist.gdp[3,]
+esp.gdp = esp.gdp$`Gross Domestic Product (GDP)`/1000000000
+esp.gdp
+
+swe.hist.gdp = Quandl("UNAE/GDPCD_SWE")
+swe.gdp = swe.hist.gdp[3,]
+swe.gdp = swe.gdp$`Gross Domestic Product (GDP)`/1000000000
+swe.gdp
+
+che.hist.gdp = Quandl("UNAE/GDPCD_CHE")
+che.gdp = che.hist.gdp[3,]
+che.gdp = che.gdp$`Gross Domestic Product (GDP)`/1000000000
+che.gdp
+
+gbr.hist.gdp = Quandl("UNAE/GDPCD_GBR")
+gbr.gdp = gbr.hist.gdp[3,]
+gbr.gdp = gbr.gdp$`Gross Domestic Product (GDP)`/1000000000
+gbr.gdp
+
+usa.hist.gdp = Quandl("UNAE/GDPCD_USA")
+usa.gdp = usa.hist.gdp[3,]
+usa.gdp = usa.gdp$`Gross Domestic Product (GDP)`/1000000000
+usa.gdp
+
+#Creating a data frame 
+dev.comb.gdp = data.frame(aus.gdp,aut.gdp,bel.gdp,can.gdp,chn.gdp,dnk.gdp,fin.gdp,fra.gdp,deu.gdp,hun.gdp,isl.gdp,irl.gdp,isr.gdp,ita.gdp,jpn.gdp,kor.gdp,nld.gdp,nzl.gdp,nor.gdp,esp.gdp,swe.gdp,che.gdp,gbr.gdp,usa.gdp)
+#Transposing the data frame to prep for combination with the ESG data frame.
+dev.comb.gdp.final = t(dev.comb.gdp)
+dev.comb.gdp.final = data.frame(dev.comb.gdp.final)
+#Labeling the data frame
+colnames(dev.comb.gdp.final)[1]<- "2012 GDP"
+round(dev.comb.gdp.final, digits = 2)
+
+dev.esg.gdp.final = cbind(dev.tot.comb.state, dev.comb.gdp.final)
+dev.esg.gdp.final
+summary(lm(dev.esg.gdp.final$`Combined ESG Score`~dev.esg.gdp.final$`2012 GDP`))
+```
+
+```{r, echo=FALSE, comment="", message=FALSE}
+dev.gdp = dev.esg.gdp.final$`2012 GDP`
+dev.esg = dev.esg.gdp.final$`Combined ESG Score`
+dev.state = dev.esg.gdp.final$State
+
+dev.final.plot = ggplot(dev.esg.gdp.final, aes(x=dev.gdp, y=dev.esg, label=dev.state)) +
+  geom_point(aes(size=dev.gdp, fill = dev.esg), shape=21) + scale_size_area(max_size = 20) +
+  scale_x_continuous(name = "State GDP (in billions", limits=c(0,20000)) +
+  scale_y_continuous(name = "State Combined ESG", limits = c(0,100)) + 
+  geom_smooth() +
+    geom_text(size=2) + theme_bw() 
+
+dev.final.plot
+cor(dev.esg.gdp.final$`2012 GDP`, dev.esg.gdp.final$`Combined ESG Score`)
+
+```
+
+Emerging markets.
+```{r, echo=FALSE, comment="", message=FALSE}
+em = esg.data.frame$MARKET.TYPE == "Developing"
+em = esg.data.frame[em,]
+summary(em)
+```
+
+Extracting 2012 EPI data for each emerging market country
+```{r, echo=FALSE, comment="", message=FALSE}
+em.epi.recent<- em[c(1,13)]
+em.epi.recent
+```
+
+Extracting 2012 WGI data for each emerging market country
+```{r, echo=FALSE, comment="", message=FALSE}
+em.wgi.recent<- em[c(1,22)]
+em.wgi.recent
+```
+
+Creating an average score for each emerging market state
+```{r, echo=FALSE, comment="", message=FALSE}
+em.comb.recent<- data.frame(em.epi.recent$TOT.EPI...2012+em.wgi.recent$TOT.WGI...2012)/2
+colnames(em.comb.recent)[1]<- "Combined ESG Score"
+em.tot.comb.state<- cbind(em$Country, em.comb.recent)
+colnames(em.tot.comb.state)[1]<- "State"
+em.tot.comb.state
+```
+
+I will no extract notional GDP for each emerging market country in 2012.  Data is provided by the Quandl data platform using data from the World Bank World Development Indicators. GDP values are in bn.
+```{r, echo=FALSE, comment="", message=FALSE}
+library(Quandl)
+Quandl.api_key("Ec8Vk5BqhqJzhQtjnzqn")
+
+arg.hist.gdp = Quandl("UNAE/GDPCD_ARG")
+arg.gdp = arg.hist.gdp[3,]
+arg.gdp = arg.gdp$`Gross Domestic Product (GDP)`/1000000000
+arg.gdp
+
+bra.hist.gdp = Quandl("UNAE/GDPCD_BRA")
+bra.gdp = bra.hist.gdp[3,]
+bra.gdp = bra.gdp$`Gross Domestic Product (GDP)`/1000000000
+bra.gdp
+
+col.hist.gdp = Quandl("UNAE/GDPCD_COL")
+col.gdp = col.hist.gdp[3,]
+col.gdp = col.gdp$`Gross Domestic Product (GDP)`/1000000000
+col.gdp
+
+hrv.hist.gdp = Quandl("UNAE/GDPCD_HRV")
+hrv.gdp = hrv.hist.gdp[3,]
+hrv.gdp = hrv.gdp$`Gross Domestic Product (GDP)`/1000000000
+hrv.gdp
+
+cyp.hist.gdp = Quandl("UNAE/GDPCD_CYP")
+cyp.gdp = cyp.hist.gdp[3,]
+cyp.gdp = cyp.gdp$`Gross Domestic Product (GDP)`/1000000000
+cyp.gdp
+
+egy.hist.gdp = Quandl("UNAE/GDPCD_EGY")
+egy.gdp = egy.hist.gdp[3,]
+egy.gdp = egy.gdp$`Gross Domestic Product (GDP)`/1000000000
+egy.gdp
+
+grc.hist.gdp = Quandl("UNAE/GDPCD_GRC")
+grc.gdp = grc.hist.gdp[3,]
+grc.gdp = grc.gdp$`Gross Domestic Product (GDP)`/1000000000
+grc.gdp
+
+ind.hist.gdp = Quandl("UNAE/GDPCD_IND")
+ind.gdp = ind.hist.gdp[3,]
+ind.gdp = ind.gdp$`Gross Domestic Product (GDP)`/1000000000
+ind.gdp
+
+idn.hist.gdp = Quandl("UNAE/GDPCD_IDN")
+idn.gdp = idn.hist.gdp[3,]
+idn.gdp = idn.gdp$`Gross Domestic Product (GDP)`/1000000000
+idn.gdp
+
+mus.hist.gdp = Quandl("UNAE/GDPCD_MUS")
+mus.gdp = mus.hist.gdp[3,]
+mus.gdp = mus.gdp$`Gross Domestic Product (GDP)`/1000000000
+mus.gdp
+
+mex.hist.gdp = Quandl("UNAE/GDPCD_MEX")
+mex.gdp = mex.hist.gdp[3,]
+mex.gdp = mex.gdp$`Gross Domestic Product (GDP)`/1000000000
+mex.gdp
+
+per.hist.gdp = Quandl("UNAE/GDPCD_PER")
+per.gdp = per.hist.gdp[3,]
+per.gdp = per.gdp$`Gross Domestic Product (GDP)`/1000000000
+per.gdp
+
+phl.hist.gdp = Quandl("UNAE/GDPCD_PHL")
+phl.gdp = phl.hist.gdp[3,]
+phl.gdp = phl.gdp$`Gross Domestic Product (GDP)`/1000000000
+phl.gdp
+
+sau.hist.gdp = Quandl("UNAE/GDPCD_SAU")
+sau.gdp = sau.hist.gdp[3,]
+sau.gdp = sau.gdp$`Gross Domestic Product (GDP)`/1000000000
+sau.gdp
+
+svn.hist.gdp = Quandl("UNAE/GDPCD_SVN")
+svn.gdp = svn.hist.gdp[3,]
+svn.gdp = svn.gdp$`Gross Domestic Product (GDP)`/1000000000
+svn.gdp
+
+zaf.hist.gdp = Quandl("UNAE/GDPCD_ZAF")
+zaf.gdp = zaf.hist.gdp[3,]
+zaf.gdp = zaf.gdp$`Gross Domestic Product (GDP)`/1000000000
+zaf.gdp
+
+tha.hist.gdp = Quandl("UNAE/GDPCD_THA")
+tha.gdp = tha.hist.gdp[3,]
+tha.gdp = tha.gdp$`Gross Domestic Product (GDP)`/1000000000
+tha.gdp
+
+tur.hist.gdp = Quandl("UNAE/GDPCD_TUR")
+tur.gdp = tur.hist.gdp[3,]
+tur.gdp = tur.gdp$`Gross Domestic Product (GDP)`/1000000000
+tur.gdp
+
+ukr.hist.gdp = Quandl("UNAE/GDPCD_UKR")
+ukr.gdp = ukr.hist.gdp[3,]
+ukr.gdp = ukr.gdp$`Gross Domestic Product (GDP)`/1000000000
+ukr.gdp
+
+#Creating a data frame 
+em.comb.gdp = data.frame(arg.gdp,bra.gdp,col.gdp,hrv.gdp,cyp.gdp,egy.gdp,grc.gdp,ind.gdp,idn.gdp,mus.gdp,mex.gdp,per.gdp,phl.gdp,sau.gdp,svn.gdp,zaf.gdp,tha.gdp,tur.gdp,ukr.gdp)
+#Transposing the data frame to prep for combination with the ESG data frame.
+em.comb.gdp.final = t(em.comb.gdp)
+em.comb.gdp.final = data.frame(em.comb.gdp.final)
+#Labeling the data frame
+colnames(em.comb.gdp.final)[1]<- "2012 GDP"
+round(em.comb.gdp.final, digits = 2)
+
+em.esg.gdp.final = cbind(em.tot.comb.state, em.comb.gdp.final)
+em.esg.gdp.final
+summary(lm(em.esg.gdp.final$`Combined ESG Score`~em.esg.gdp.final$`2012 GDP`))
+
+```
+
+```{r, echo=FALSE, comment="", message=FALSE}
+em.gdp = em.esg.gdp.final$`2012 GDP`
+em.esg = em.esg.gdp.final$`Combined ESG Score`
+em.state = em.esg.gdp.final$State
+
+em.final.plot = ggplot(em.esg.gdp.final, aes(x=em.gdp, y=em.esg, label=em.state)) +
+  geom_point(aes(size=em.gdp, fill = em.esg), shape=21) + scale_size_area(max_size = 20) +
+  scale_x_continuous(name = "State GDP (in billions", limits=c(0,3000)) +
+  scale_y_continuous(name = "State Combined ESG", limits = c(0,80)) + 
+  geom_smooth() +
+    geom_text(size=2) + theme_bw() 
+
+em.final.plot
+
+cor(em.esg.gdp.final$`Combined ESG Score`, em.esg.gdp.final$`2012 GDP`)
+```
+
+Pulling of stock index data for each state within the sample.  Stock index return data is the longitudinal period of 2004 - 2012.  The data is provided through the Quandl data platform using data feeds provided by YAHOO, Zagreb Stock Exchange and the World Federation of Exchanges.
+```{r, echo=FALSE, comment="", message=FALSE}
+library("rvest")
+library(PerformanceAnalytics)
+#Argentina
+mrvl=Quandl("YAHOO/INDEX_MERV.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31") 
+mrvl.return<- (Return.calculate(mrvl, method = c("discrete")))
+mrvl.long.period<- Return.annualized(mrvl.return, scale = NA, geometric = FALSE)
+
+#Australia
+axjo=Quandl("YAHOO/INDEX_AXJO.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+axjo.return<- (Return.calculate(axjo, method = c("discrete")))
+axjo.long.period<- Return.annualized(axjo.return, scale = NA, geometric = FALSE)
+
+#Austria
+atx=Quandl("YAHOO/INDEX_ATX.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+atx.return<- (Return.calculate(atx, method = c("discrete")))
+atx.long.period<- Return.annualized(atx.return, scale = NA, geometric = FALSE)
+
+#Belgium
+bfx=Quandl("YAHOO/INDEX_BFX.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+bfx.return<- (Return.calculate(bfx, method = c("discrete")))
+bfx.long.period<- Return.annualized(bfx.return, scale = NA, geometric = FALSE)
+
+#Brazil
+bovsp=Quandl("WFE/INDEXES_BMFBOVESPAIBOVESPA", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+bovsp.return<- (Return.calculate(bovsp, method = c("discrete")))
+bovsp.long.period<- Return.annualized(bovsp.return, scale = NA, geometric = FALSE)
+
+#Canada
+tsx=Quandl("YAHOO/INDEX_GSPTSE.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+tsx.return<- (Return.calculate(tsx, method = c("discrete")))
+tsx.long.period<- Return.annualized(tsx.return, scale = NA, geometric = FALSE)
+
+#China. Currency CNY
+sse=Quandl("YAHOO/SS_000970.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+sse.return<- (Return.calculate(sse, method = c("discrete")))
+sse.long.period<- Return.annualized(sse.return, scale = NA, geometric = FALSE)
+
+#Columbia.
+bvd=Quandl("WFE/MKTCAP_COLOMBIASE", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+bvd.return<- (Return.calculate(bvd, method = c("discrete")))
+bvd.long.period<- Return.annualized(bvd.return, scale = NA, geometric = FALSE)
+
+#Croatia
+cro=Quandl("ZAGREBSE/CROBEX", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+cro.return<- (Return.calculate(cro, method = c("discrete")))
+cro.long.period<- Return.annualized(cro.return, scale = NA, geometric = FALSE)
+
+#Cyprus. Currency USD
+cse=Quandl("WFE/INDEXES_CYPRUSSECSEGENERALINDEX", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+cse.return<- (Return.calculate(cse, method = c("discrete")))
+cse.long.period<- Return.annualized(cse.return, scale = NA, geometric = FALSE)
+
+#Czech Republic
+px=Quandl("PRAGUESE/PX.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+px.return<- (Return.calculate(px, method = c("discrete")))
+px.long.period<- Return.annualized(px.return, scale = NA, geometric = FALSE)
+
+#Denmark
+omx=Quandl("YAHOO/INDEX_OMXC20.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+omx.return<- (Return.calculate(omx, method = c("discrete")))
+omx.long.period<- Return.annualized(omx.return, scale = NA, geometric = FALSE)
+
+#Egypt
+egx=Quandl("YAHOO/INDEX_CCSI.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+egx.return<- (Return.calculate(egx, method = c("discrete")))
+egx.long.period<- Return.annualized(egx.return, scale = NA, geometric = FALSE)
+
+#Finland
+omxh=Quandl("NASDAQOMX/OMXH25.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+omxh.return<- (Return.calculate(omxh, method = c("discrete")))
+omxh.long.period<- Return.annualized(omxh.return, scale = NA, geometric = FALSE)
+
+#France
+cac=Quandl("YAHOO/INDEX_FCHI.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+cac.return<- (Return.calculate(cac, method = c("discrete")))
+cac.long.period<- Return.annualized(cac.return, scale = NA, geometric = FALSE)
+
+#Germany
+dax=Quandl("YAHOO/INDEX_GDAXI.6", collapse = "annual", type = "timeSeries", 
+start_date="2004-12-31", end_date="2012-12-31")                   
+dax.return<- (Return.calculate(dax, method = c("discrete")))
+dax.long.period<- Return.annualized(dax.return, scale = NA, geometric = FALSE)
+
+#Greece
+athex=Quandl("WFE/INDEXES_ATHENSSEGENERALPRICE", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+athex.return<- (Return.calculate(athex, method = c("discrete")))
+athex.long.period<- Return.annualized(athex.return, scale = NA, geometric = FALSE)
+
+#Hungary
+bux=Quandl("BUDAPESTSE/BUX.2", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")  
+bux.return<- (Return.calculate(bux, method = c("discrete")))
+bux.long.period<- Return.annualized(bux.return, scale = NA, geometric = FALSE)
+
+#Iceland
+omxi=Quandl("NASDAQOMX/OMXIPI.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+omxi.return<- (Return.calculate(omxi, method = c("discrete")))
+omxi.long.period<- Return.annualized(omxi.return, scale = NA, geometric = FALSE)
+
+#India
+bse=Quandl("BSE/BSE100.4", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+bse.return<- (Return.calculate(bse, method = c("discrete")))
+bse.long.period<- Return.annualized(bse.return, scale = NA, geometric = FALSE)
+
+#Indonesia
+ise=Quandl("WFE/INDEXES_INDONESIASEJSXCOMPOSITEINDEX", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+ise.return<- (Return.calculate(ise, method = c("discrete")))
+ise.long.period<- Return.annualized(ise.return, scale = NA, geometric = FALSE)
+
+#Ireland
+iseq=Quandl("YAHOO/INDEX_ISEQ.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+iseq.return<- (Return.calculate(iseq, method = c("discrete")))
+iseq.long.period<- Return.annualized(iseq.return, scale = NA, geometric = FALSE)
+
+#Israel
+nqil=Quandl("NASDAQOMX/OMXIPI.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+nqil.return<- (Return.calculate(nqil, method = c("discrete")))
+nqil.long.period<- Return.annualized(nqil.return, scale = NA, geometric = FALSE)
+
+#Italy
+mib=Quandl("WFE/INDEXES_ITALIANASEHISTORICMIB", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+mib.return<- (Return.calculate(mib, method = c("discrete")))
+mib.long.period<- Return.annualized(mib.return, scale = NA, geometric = FALSE)
+
+#Japan
+nik=Quandl("YAHOO/INDEX_N225.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+nik.return<- (Return.calculate(nik, method = c("discrete")))
+nik.long.period<- Return.annualized(nik.return, scale = NA, geometric = FALSE)
+
+#South Korea
+kospi=Quandl("YAHOO/INDEX_KS11.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+kospi.return<- (Return.calculate(kospi, method = c("discrete")))
+kospi.long.period<- Return.annualized(kospi.return, scale = NA, geometric = FALSE)
+
+#Mauritius
+semdex=Quandl("WFE/INDEXES_MAURITIUSSESEMDEX", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+semdex.return<- (Return.calculate(semdex, method = c("discrete")))
+semdex.long.period<- Return.annualized(semdex.return, scale = NA, geometric = FALSE)
+
+#Mexico
+bolsa=Quandl("WFE/INDEXES_MEXICANASEIPCCOMPMX", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+bolsa.return<- (Return.calculate(bolsa, method = c("discrete")))
+bolsa.long.period<- Return.annualized(bolsa.return, scale = NA, geometric = FALSE)
+
+#Netherlands
+aex=Quandl("YAHOO/INDEX_AEX.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+aex.return<- (Return.calculate(aex, method = c("discrete")))
+aex.long.period<- Return.annualized(aex.return, scale = NA, geometric = FALSE)
+
+#New Zealand (millions USD)
+nzx=Quandl("WFE/SHARES_NZXLIMITED", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+nzx.return<- (Return.calculate(nzx, method = c("discrete")))
+nzx.long.period<- Return.annualized(nzx.return, scale = NA, geometric = FALSE)
+
+#Norway 
+nok=Quandl("NASDAQOMX/NQNONOK.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+nok.return<- (Return.calculate(nok, method = c("discrete")))
+nok.long.period<- Return.annualized(nok.return, scale = NA, geometric = FALSE)
+
+#Philippine
+psei=Quandl("WFE/INDEXES_PHILIPPINESEPSEINDEX", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+psei.return<- (Return.calculate(psei, method = c("discrete")))
+psei.long.period<- Return.annualized(psei.return, scale = NA, geometric = FALSE)
+
+#Saudi Arabia
+tasi=Quandl("WFE/INDEXES_SAUDISETASI", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+tasi.return<- (Return.calculate(tasi, method = c("discrete")))
+tasi.long.period<- Return.annualized(tasi.return, scale = NA, geometric = FALSE)
+
+#Slovenia
+sbi=Quandl("WFE/INDEXES_LJUBLJANASESBI", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+sbi.return<- (Return.calculate(sbi, method = c("discrete")))
+sbi.long.period<- Return.annualized(sbi.return, scale = NA, geometric = FALSE)
+
+#South Africa 
+zar=Quandl("NASDAQOMX/NQZAZAR.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+zar.return<- (Return.calculate(zar, method = c("discrete")))
+zar.long.period<- Return.annualized(zar.return, scale = NA, geometric = FALSE)
+
+#Spain
+ibex=Quandl("YAHOO/INDEX_IBEX.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+ibex.return<- (Return.calculate(ibex, method = c("discrete")))
+ibex.long.period<- Return.annualized(ibex.return, scale = NA, geometric = FALSE)
+
+#Sweden
+omxs=Quandl("YAHOO/INDEX_OMX.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+omxs.return<- (Return.calculate(omxs, method = c("discrete")))
+omxs.long.period<- Return.annualized(omxs.return, scale = NA, geometric = FALSE)
+
+#Switzerland
+smi=Quandl("WFE/INDEXES_SIXSWISSEXCHANGESMI", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+smi.return<- (Return.calculate(smi, method = c("discrete")))
+smi.long.period<- Return.annualized(smi.return, scale = NA, geometric = FALSE)
+
+#Thailand
+set=Quandl("THAISE/MI_SET", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+set.return<- (Return.calculate(set, method = c("discrete")))
+set.long.period<- Return.annualized(set.return, scale = NA, geometric = FALSE)
+
+#Turkey
+nqtr=Quandl("NASDAQOMX/NQTR.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+nqtr.return<- (Return.calculate(nqtr, method = c("discrete")))
+nqtr.long.period<- Return.annualized(nqtr.return, scale = NA, geometric = FALSE)
+
+#Ukraine
+ux=Quandl("UKRSE/UX.4", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+ux.return<- (Return.calculate(ux, method = c("discrete")))
+ux.long.period<- Return.annualized(ux.return, scale = NA, geometric = FALSE)
+
+#United Kingdom
+nqgb=Quandl("NASDAQOMX/NQGB.1", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+nqgb.return<- (Return.calculate(nqgb, method = c("discrete")))
+nqgb.long.period<- Return.annualized(nqgb.return, scale = NA, geometric = FALSE)
+
+#United States
+dji=Quandl("YAHOO/INDEX_DJI.6", collapse = "annual", type = "timeSeries", start_date="2004-12-31", end_date="2012-12-31")
+dji.return<- (Return.calculate(dji, method = c("discrete")))
+dji.long.period<- Return.annualized(dji.return, scale = NA, geometric = FALSE)
+
+```
+
+Creating a data frame for all markets
+```{r, echo=FALSE, comment="", message=FALSE}
+
+comb.ret= data.frame(mrvl.long.period,axjo.long.period,atx.long.period,bfx.long.period,bovsp.long.period,tsx.long.period,sse.long.period,bvd.long.period,cro.long.period,cse.long.period,px.long.period,omx.long.period,egx.long.period,omxh.long.period,cac.long.period,dax.long.period,athex.long.period,bux.long.period,omxi.long.period,bse.long.period,ise.long.period,iseq.long.period,nqil.long.period,mib.long.period,nik.long.period,kospi.long.period,semdex.long.period,bolsa.long.period,aex.long.period,nzx.long.period,nok.long.period,psei.long.period,tasi.long.period,sbi.long.period,zar.long.period,ibex.long.period,omxs.long.period,smi.long.period,set.long.period,nqtr.long.period,ux.long.period,nqgb.long.period, dji.long.period)
+
+#Transposing the data frame to prep for combination with the ESG data frame.
+comb.ret.final = t(comb.ret)
+comb.ret.final = data.frame(comb.ret.final)
+#Labeling the data frame
+colnames(comb.ret.final)[1]<- "2004 - 2012 Annual Return"
+
+esg.ret.final = cbind(tot.comb.state, comb.ret.final,comb.gdp.final)
+esg.ret.final
+```
+
+```{r, echo=FALSE, comment="", message=FALSE}
+ret = esg.ret.final$`2004 - 2014 Annual Return`
+esg = esg.gdp.final$`Combined ESG Score`
+state = esg.gdp.final$State
+
+radius<- sqrt(esg.ret.final$`2012 GDP`/pi)
+symbols(esg.ret.final$`Combined ESG Score`, esg.ret.final$`2004 - 2012 Annual Return`, circles = radius, inches = 0.35, fg="white", bg="red", xlab = "State Combined ESG Score", ylab = "Annual Index Return (2004-2012)")
+text(esg.ret.final$`Combined ESG Score`, esg.ret.final$`2004 - 2012 Annual Return`, esg.ret.final$State, cex = 0.5)
+
+summary(lm(esg.ret.final$`Combined ESG Score` ~ esg.ret.final$`2004 - 2012 Annual Return`))
+cor(esg.ret.final$`Combined ESG Score`, esg.ret.final$`2004 - 2012 Annual Return`)
+```
+
+Extracting the annual returns for each of the ESG Index Indicators.  I will calculate annualized returns for each of the indictors (EPI and WGI) and then proceed to create a combined annualized return for all of the indicators creating a Total ESG Index Return variable (TOTESGRET).
+
+Creating dataframe
+```{r, echo=FALSE, comment="", message=FALSE}
+
+esg.index.ret=esg.data.frame[c(1,23:38)]
+esg.index.ret
+```
+
+Calculating annualized returns for each of the ESG Indexes.
+```{r, echo=FALSE, comment="", message=FALSE}
+epi.annual = (esg.index.ret$EPI.RET...2005 + esg.index.ret$EPI.RET...2006 + esg.index.ret$EPI.RET...2007 + esg.index.ret$EPI.RET...2008 + esg.index.ret$EPI.RET...2009 + esg.index.ret$EPI.RET...2010 + esg.index.ret$EPI.RET...2011 + esg.index.ret$EPI.RET...2012)/8
+
+wgi.annual = (esg.index.ret$WGI.RET...2005 + esg.index.ret$WGI.RET...2006 + esg.index.ret$WGI.RET...2007 + esg.index.ret$WGI.RET...2008 + esg.index.ret$WGI.RET...2009 + esg.index.ret$WGI.RET...2010 + esg.index.ret$WGI.RET...2011 + esg.index.ret$WGI.RET...2012)/8
+
+```
+
+Combining Index Return data to primary data frame
+```{r, echo=FALSE, comment="", message=FALSE}
+TOTDF = cbind(esg.ret.final, epi.annual, wgi.annual)
+TOTDF
+```
+
+Creating an exploratory scatterplot for each of the ESG Index Returns vs. Stock Index Returns
+```{r, echo=FALSE, comment="", message=FALSE}
+plot(TOTDF$`2004 - 2012 Annual Return`, TOTDF$epi.annual, main = "Annual Stock Index Returns vs. EPI Index Returns", xlab = "Annual Stock Index Returns", ylab = "Annual EPI Index Returns", pch = 19) 
+lines(lowess(TOTDF$`2004 - 2012 Annual Return`, TOTDF$epi.annual), col = "blue")
+summary(lm(TOTDF$`2004 - 2012 Annual Return` ~ TOTDF$epi.annual))
+cor(TOTDF$`2004 - 2012 Annual Return`, TOTDF$epi.annual)
+
+
+plot(TOTDF$`2004 - 2012 Annual Return`, TOTDF$wgi.annual, main = "Annual Stock Index Returns vs. WGI Index Returns", xlab = "Annual Stock Index Returns", ylab = "Annual WGI Index Returns", pch = 19)
+lines(lowess(TOTDF$`2004 - 2012 Annual Return`, TOTDF$wgi.annual), col = "blue")
+summary(lm(TOTDF$`2004 - 2012 Annual Return` ~ TOTDF$wgi.annual))
+cor(TOTDF$`2004 - 2012 Annual Return`, TOTDF$wgi.annual)
+
+```
+
+Finally, I am combining the EPI Index Returns and WGI Index Returns.  I am assigning equal weights to each Index Return.
+```{r, echo=FALSE, comment="", message=FALSE}
+TOTSESGRET = as.data.frame(TOTDF$epi.annual + TOTDF$wgi.annual)/2
+colnames(TOTSESGRET)[1]<- "Combined ESG Index Return"
+TOTDFC = cbind(TOTDF, TOTSESGRET)
+TOTDFC
+```
+
+Creating an exploratory scatterplot for the Combined ESG Index Returns vs. Stock Index Returns
+```{r, echo=FALSE, comment="", message=FALSE}
+plot(TOTDFC$`2004 - 2012 Annual Return`, TOTDFC$`Combined ESG Index Return`, main = "Annual Stock Index Returns vs. Combined ESG Index Returns", xlab = "Annual Stock Index Returns", ylab = "Annual Combined ESG Index Returns", pch = 19) 
+lines(lowess(TOTDF$`2004 - 2012 Annual Return`, TOTDF$epi.annual), col = "blue")
+cor(TOTDFC$`2004 - 2012 Annual Return`, TOTDFC$`Combined ESG Index Return`)
+```
+
+Creating a data frame for developed markets
+```{r, echo=FALSE, comment="", message=FALSE}
+
+dev.comb.ret= data.frame(axjo.long.period,atx.long.period,bfx.long.period,tsx.long.period,sse.long.period,omx.long.period,omxh.long.period,cac.long.period,dax.long.period,bux.long.period,omxi.long.period,iseq.long.period,nqil.long.period,mib.long.period,nik.long.period,kospi.long.period,aex.long.period,nzx.long.period,nok.long.period,ibex.long.period,omxs.long.period,smi.long.period,nqgb.long.period, dji.long.period)
+
+#Transposing the data frame to prep for combination with the ESG data frame.
+dev.comb.ret.final = t(dev.comb.ret)
+dev.comb.ret.final = data.frame(dev.comb.ret.final)
+#Labeling the data frame
+colnames(dev.comb.ret.final)[1]<- "2004 - 2012 Annual Return"
+
+dev.esg.ret.final = cbind(dev.tot.comb.state, dev.comb.ret.final,dev.comb.gdp.final)
+dev.esg.ret.final
+```
+
+```{r, echo=FALSE, comment="", message=FALSE}
+dev.mkt.ret = dev.esg.ret.final$`2004 - 2014 Annual Return`
+dev.mkt.esg = dev.esg.gdp.final$`Combined ESG Score`
+dev.mkt.state = dev.esg.gdp.final$State
+
+radius<- sqrt(dev.esg.ret.final$`2012 GDP`/pi)
+symbols(dev.esg.ret.final$`Combined ESG Score`, dev.esg.ret.final$`2004 - 2012 Annual Return`, circles = radius, inches = 0.35, fg="white", bg="red", xlab = "State Combined ESG Score", ylab = "Annual Index Return (2004-2012)")
+text(dev.esg.ret.final$`Combined ESG Score`, dev.esg.ret.final$`2004 - 2012 Annual Return`, dev.esg.ret.final$State, cex = 0.5)
+
+summary(lm(dev.esg.ret.final$`Combined ESG Score` ~ dev.esg.ret.final$`2004 - 2012 Annual Return`))
+
+cor(dev.esg.ret.final$`2004 - 2012 Annual Return`, dev.esg.gdp.final$`Combined ESG Score`)
+
+```
+
+Creating a data frame for emerging markets
+```{r, echo=FALSE, comment="", message=FALSE}
+
+em.comb.ret= data.frame(mrvl.long.period,bovsp.long.period,bvd.long.period,cro.long.period,cse.long.period,px.long.period,egx.long.period,athex.long.period,bse.long.period,ise.long.period,semdex.long.period,bolsa.long.period,psei.long.period,tasi.long.period,sbi.long.period,zar.long.period,set.long.period,nqtr.long.period,ux.long.period)
+
+#Transposing the data frame to prep for combination with the ESG data frame.
+em.comb.ret.final = t(em.comb.ret)
+em.comb.ret.final = data.frame(em.comb.ret.final)
+#Labeling the data frame
+colnames(em.comb.ret.final)[1]<- "2004 - 2012 Annual Return"
+
+em.esg.ret.final = cbind(em.tot.comb.state, em.comb.ret.final,em.comb.gdp.final)
+em.esg.ret.final
+```
+
+```{r, echo=FALSE, comment="", message=FALSE}
+em.mkt.ret = em.esg.ret.final$`2004 - 2014 Annual Return`
+em.mkt.esg = em.esg.gdp.final$`Combined ESG Score`
+em.mkt.state = em.esg.gdp.final$State
+
+radius<- sqrt(em.esg.ret.final$`2012 GDP`/pi)
+symbols(em.esg.ret.final$`Combined ESG Score`, em.esg.ret.final$`2004 - 2012 Annual Return`, circles = radius, inches = 0.35, fg="white", bg="red", xlab = "State Combined ESG Score", ylab = "Annual Index Return (2004-2012)")
+text(em.esg.ret.final$`Combined ESG Score`, em.esg.ret.final$`2004 - 2012 Annual Return`, em.esg.ret.final$State, cex = 0.5)
+
+summary(lm(em.esg.ret.final$`Combined ESG Score` ~ em.esg.ret.final$`2004 - 2012 Annual Return`))
+
+cor(em.esg.ret.final$`2004 - 2012 Annual Return`, em.esg.gdp.final$`Combined ESG Score`)
+
+```
